@@ -12,9 +12,19 @@ _logger = logging.getLogger(__name__)
 class MultiSafepayPaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('multisafepay', 'MultiSafepay')])
-    multisafepay_api_key_test = fields.Char('MultiSafepay test api key', size=40)
-    multisafepay_api_key_live = fields.Char('MultiSafepay live api key', size=40)
+    provider = fields.Selection(
+        selection_add=[('multisafepay', 'MultiSafepay')],
+        ondelete={'multisafepay': 'set default'})
+    multisafepay_api_key_test = fields.Char(
+        'MultiSafepay test api key',
+        size=40,
+        required_if_provider="multisafepay",
+        groups="base.group_user")
+    multisafepay_api_key_live = fields.Char(
+        'MultiSafepay live api key',
+        size=40,
+        required_if_provider="multisafepay",
+        groups="base.group_user")
 
     @api.onchange('multisafepay_api_key_test')
     def _onchange_multisafepay_api_key_test(self):
