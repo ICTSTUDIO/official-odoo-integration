@@ -88,7 +88,7 @@ class MultiSafepayAccountMove(models.Model):
     def __can_be_refund(self):
         self.ensure_one()
 
-        if self.type != 'out_refund':
+        if self.move_type != 'out_refund':
             return False
         if self.state != 'posted':
             return False

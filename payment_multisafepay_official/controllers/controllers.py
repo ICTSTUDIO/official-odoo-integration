@@ -30,7 +30,7 @@ class MultiSafepayController(http.Controller):
         acquirer = request.env['payment.acquirer'].search([('id', '=', post['acquirer'])], limit=1)
 
         try:
-            multisafepay_client = acquirer.get_multisafepay_client()
+            multisafepay_client = acquirer.sudo().get_multisafepay_client()
         except ValueError as exception:
             return Response(str(exception), status=400)
 

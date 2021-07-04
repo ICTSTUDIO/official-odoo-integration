@@ -33,16 +33,16 @@
     <template id="multisafepay_payment_method_list" name="MultiSafepay payment methods list">
         <input type="hidden" t-if="invoice_id" name="invoice_id" t-att-value="invoice_id"/>
         <t t-if="invoice" t-set="payment_methods"
-           t-value="multisafepay_aq.get_appropriate_payment_methods(invoice.amount_residual, invoice.currency_id, invoice.partner_id)"/>
+           t-value="multisafepay_aq.sudo().get_appropriate_payment_methods(invoice.amount_residual, invoice.currency_id, invoice.partner_id)"/>
         <t t-elif="sale_order" t-set="payment_methods"
-           t-value="multisafepay_aq.get_appropriate_payment_methods(sale_order.amount_total, sale_order.currency_id, sale_order.partner_invoice_id)"/>
+           t-value="multisafepay_aq.sudo().get_appropriate_payment_methods(sale_order.amount_total, sale_order.currency_id, sale_order.partner_invoice_id)"/>
         <t t-elif="website_sale_order" t-set="payment_methods"
-           t-value="multisafepay_aq.get_appropriate_payment_methods(website_sale_order.amount_total, website_sale_order.currency_id, website_sale_order.partner_invoice_id)"/>
+           t-value="multisafepay_aq.sudo().get_appropriate_payment_methods(website_sale_order.amount_total, website_sale_order.currency_id, website_sale_order.partner_invoice_id)"/>
         <t t-else="" t-set="payment_methods"
-           t-value="multisafepay_aq.get_appropriate_payment_methods(amount, currency, partner)"/>
+           t-value="multisafepay_aq.sudo().get_appropriate_payment_methods(amount, currency, partner)"/>
         <t t-set="payment_methods_count" t-value="len(payment_methods) if payment_methods else 0"/>
         <t t-set="cc_payment_methods" t-value="list(filter(lambda pm: pm.is_credit_card, payment_methods))"/>
-        <t t-set="ideal_issuers" t-value="multisafepay_aq.get_ideal_issuers()"/>
+        <t t-set="ideal_issuers" t-value="multisafepay_aq.sudo().get_ideal_issuers()"/>
         <t t-foreach="payment_methods" t-as="payment_method">
             <t t-if="not payment_method.is_credit_card">
                 <div class="card-body">
