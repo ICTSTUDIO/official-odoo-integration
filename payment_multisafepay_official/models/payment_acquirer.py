@@ -271,9 +271,9 @@ class MultiSafepayPaymentAcquirer(models.Model):
         if not order_line:
             return tax_percentage
 
-        if order_line.price_tax != 0 and order_line.price_unit != 0:
-            tax_percentage = order_line.price_tax / order_line.price_unit
-        return round(tax_percentage, 2)
+        if order_line.tax_id:
+            tax_percentage = sum(order_line.tax_id.mapped('amount'))
+        return tax_percentage
 
     def __get_shopping_cart_with_checkout_options(self, sale_order, gateway, current_currency):
         if not sale_order:
@@ -292,7 +292,7 @@ class MultiSafepayPaymentAcquirer(models.Model):
         ]
         for order_line in sale_order.order_line:
             tax_percentage = MultiSafepayPaymentAcquirer.__get_tax_percentage(order_line)
-            tax_table_selector_name = 'TAX' + str(int(tax_percentage * 100)) if tax_percentage != 0 else 'none'
+            tax_table_selector_name = 'BTW' + str(int(tax_percentage)) if tax_percentage != 0 else 'none'
             price_unit = self.__check_unit_price(
                 gateway=gateway,
                 current_currency=current_currency,
@@ -318,7 +318,7 @@ class MultiSafepayPaymentAcquirer(models.Model):
                     'name': tax_table_selector_name,
                     'rules': [
                         {
-                            'rate': tax_percentage,
+                            'rate': tax_percentage / 100,
                         },
                     ],
                 })
