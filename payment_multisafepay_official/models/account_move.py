@@ -70,7 +70,7 @@ class MultiSafepayAccountMove(models.Model):
                             response.get('error_info', 'unknown'))
         self.multisafepay_refund_id = response.get('data').get('refund_id')
         self.create_refund_payment()
-        self.invoice_payment_state = 'in_payment'
+        self.payment_state = 'in_payment'
         self.message_post(body='Refund was requested with MultiSafepay')
 
         if refund_with_shopping_cart:
@@ -92,7 +92,7 @@ class MultiSafepayAccountMove(models.Model):
             return False
         if self.state != 'posted':
             return False
-        if self.invoice_payment_state == 'paid' or self.invoice_payment_state == 'in_payment':
+        if self.payment_state == 'paid' or self.payment_state == 'in_payment':
             return False
         return True
 
@@ -112,13 +112,13 @@ class MultiSafepayAccountMove(models.Model):
 
     def set_refund_paid(self):
         self.ensure_one()
-        if self.invoice_payment_state != 'in_payment':
+        if self.payment_state != 'in_payment':
             return
         payment = self.env['account.payment'].sudo().browse(int(self.payment_refund_id))
         context = self.env.context.copy()
         context.update({'mail_create_nosubscribe': True})
         payment.with_context(context).post()
-        self.invoice_payment_state = 'paid'
+        self.payment_state = 'paid'
         self.message_post(body='Refund was paid with MultiSafepay')
 
     def create_refund_payment(self):

@@ -10,7 +10,7 @@
 
     'summary': '''E-commerce is part of our DNA''',
 
-    'author': 'MultiSafepay',
+    'author': 'MultiSafepay, André Schenkels',
     'website': 'http://www.multisafepay.com',
 
     'license': 'Other OSI approved licence',
@@ -19,7 +19,7 @@
     # Check https://github.com/odoo/odoo/blob/13.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'eCommerce',
-    'version': '14.0.1.0',
+    'version': '14.0.1.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['payment', 'sale', 'delivery'],
